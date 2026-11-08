@@ -15,6 +15,7 @@ namespace PAW_Proyecto1_MauricioSolorzanoBarrantes.Models
 
         [Required(ErrorMessage = "El ID del usuario es obligatorio.")]
         public int IdUsuario { get; set; }
+        public string NombreUsuario { get; set; }
 
         [Required(ErrorMessage = "El texto del comentario es obligatorio.")]
         [StringLength(2000, ErrorMessage = "El comentario no puede superar los 2000 caracteres.")]

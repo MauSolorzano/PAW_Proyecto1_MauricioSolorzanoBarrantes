@@ -120,10 +120,13 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ComentarioController.cs" />
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
+    <Compile Include="Data\ComentarioData.cs" />
     <Compile Include="Data\Conexion.cs" />
+    <Compile Include="Data\EstadoTicketData.cs" />
     <Compile Include="Data\Seguridad.cs" />
     <Compile Include="Data\TicketData.cs" />
     <Compile Include="Data\UsuarioData.cs" />
@@ -191,9 +194,11 @@
     <Content Include="Views\Cuenta\Login.cshtml" />
     <Content Include="Views\Ticket\Index.cshtml" />
     <Content Include="Views\Ticket\Crear.cshtml" />
+    <Content Include="Views\Ticket\Detalle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Comentario\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

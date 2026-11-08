@@ -26,6 +26,7 @@ namespace PAW_Proyecto1_MauricioSolorzanoBarrantes.Models
 
         [Required(ErrorMessage = "El estado es obligatorio.")]
         public int IdEstado { get; set; }
+        public string NombreEstado { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime FechaCreacion { get; set; } = DateTime.Now;

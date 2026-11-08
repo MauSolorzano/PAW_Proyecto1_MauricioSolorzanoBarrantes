@@ -46,8 +46,9 @@
                                 <th>Número</th>
                                 <th>Título</th>
                                 <th>Categoría</th>
-                                <th>Estado (ID)</th>
+                                <th>Estado</th>
                                 <th>Fecha de creación</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
 
@@ -58,8 +59,12 @@
                                     <td>@ticket.Id</td>
                                     <td>@ticket.Titulo</td>
                                     <td>@ticket.Categoria</td>
-                                    <td>@ticket.IdEstado</td>
+                                    <td>@ticket.NombreEstado</td>
                                     <td>@ticket.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        @Html.ActionLink("Ver detalle", "Detalle",
+                                                new { id = ticket.Id })
+                                    </td>
                                 </tr>
                             }
                         </tbody>
