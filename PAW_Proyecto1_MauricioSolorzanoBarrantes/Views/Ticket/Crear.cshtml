@@ -1,0 +1,105 @@
+﻿
+@model PAW_Proyecto1_MauricioSolorzanoBarrantes.Models.Ticket
+
+@{
+    ViewBag.Title = "Crear ticket";
+}
+
+<main class="container">
+
+    <section class="row justify-content-center mt-4">
+
+        <div class="col-md-8 col-lg-7">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <header class="mb-4">
+                        <h2>Crear nuevo ticket</h2>
+                        <p class="text-muted">
+                            Complete la información para registrar un nuevo ticket de soporte.
+                        </p>
+                    </header>
+
+                    @using (Html.BeginForm("Crear", "Ticket", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label for="Titulo" class="form-label">
+                                Título
+                            </label>
+
+                            <input type="text"
+                                   id="Titulo"
+                                   name="Titulo"
+                                   class="form-control"
+                                   maxlength="150"
+                                   required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Descripcion" class="form-label">
+                                Descripción del problema
+                            </label>
+
+                            <textarea id="Descripcion"
+                                      name="Descripcion"
+                                      class="form-control"
+                                      rows="5"
+                                      required></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="Categoria" class="form-label">
+                                Categoría
+                            </label>
+
+                            <select id="Categoria"
+                                    name="Categoria"
+                                    class="form-select"
+                                    required>
+
+                                <option value="">Seleccione una categoría</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Software">Software</option>
+                                <option value="Redes">Redes</option>
+                                <option value="Otros">Otros</option>
+
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-2">
+
+                            <button type="submit" class="btn btn-primary">
+                                Registrar ticket
+                            </button>
+
+                            @Html.ActionLink(
+                                     "Volver a mis tickets",
+                                     "Index",
+                                     "Ticket",
+                                     null,
+                                     new { @class = "btn btn-outline-secondary" }
+                                 )
+
+                        </div>
+                    }
+
+                    @if (ViewBag.Mensaje != null)
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            @ViewBag.Mensaje
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
