@@ -10,13 +10,62 @@
     <section class="mt-4">
 
         <header class="mb-4">
-            <h2>Mis tickets</h2>
-            <p class="text-muted">
-                Consulta los tickets que has registrado y su estado actual.
-            </p>
+
+            @if (Session["UsuarioRol"] != null &&
+                Session["UsuarioRol"].ToString() == "Administrador")
+            {
+                <h2>Gestión de tickets</h2>
+                <p class="text-muted">
+                    Consulta y administra los tickets registrados en el sistema.
+                </p>
+            }
+            else
+            {
+                <h2>Mis tickets</h2>
+                <p class="text-muted">
+                    Consulta los tickets que has registrado y su estado actual.
+                </p>
+            }
+
         </header>
 
+        <!-- Búsqueda de tickets -->
+        <div class="row mb-3">
+
+            <div class="col-md-6">
+
+                <label for="busqueda" class="form-label">
+                    Buscar ticket:
+                </label>
+
+                <div class="input-group">
+
+                    <input type="text"
+                           id="busqueda"
+                           class="form-control"
+                           placeholder="Número, título o estado..." />
+
+                    <button type="button"
+                            id="btnBuscar"
+                            class="btn btn-primary">
+                        Buscar
+                    </button>
+
+                    <button type="button"
+                            id="btnLimpiar"
+                            class="btn btn-outline-secondary">
+                        Limpiar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Crear ticket -->
         <div class="mb-3">
+
             @Html.ActionLink(
                      "Crear nuevo ticket",
                      "Crear",
@@ -24,8 +73,10 @@
                      null,
                      new { @class = "btn btn-primary" }
                  )
+
         </div>
 
+        <!-- Mensaje de confirmación -->
         @if (TempData["Mensaje"] != null)
         {
             <div class="alert alert-success" role="alert">
@@ -33,6 +84,16 @@
             </div>
         }
 
+        <!-- Direcciones generadas por MVC -->
+        <input type="hidden"
+               id="urlBuscar"
+               value="@Url.Action("Buscar", "Ticket")" />
+
+        <input type="hidden"
+               id="urlDetalle"
+               value="@Url.Action("Detalle", "Ticket")" />
+
+        <!-- Tabla de tickets -->
         <div class="card shadow-sm">
 
             <div class="card-body">
@@ -52,21 +113,40 @@
                             </tr>
                         </thead>
 
-                        <tbody>
-                            @foreach (var ticket in Model)
+                        <tbody id="tablaTickets">
+
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var ticket in Model)
+                                {
+                                    <tr>
+                                        <td>@ticket.Id</td>
+                                        <td>@ticket.Titulo</td>
+                                        <td>@ticket.Categoria</td>
+                                        <td>@ticket.NombreEstado</td>
+                                        <td>
+                                            @ticket.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink(
+                                                     "Ver detalle",
+                                                     "Detalle",
+                                                     new { id = ticket.Id },
+                                                     new { @class = "btn btn-sm btn-outline-primary" }
+                                                 )
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>@ticket.Id</td>
-                                    <td>@ticket.Titulo</td>
-                                    <td>@ticket.Categoria</td>
-                                    <td>@ticket.NombreEstado</td>
-                                    <td>@ticket.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td>
-                                        @Html.ActionLink("Ver detalle", "Detalle",
-                                                new { id = ticket.Id })
+                                    <td colspan="6" class="text-center text-muted">
+                                        No hay tickets registrados.
                                     </td>
                                 </tr>
                             }
+
                         </tbody>
 
                     </table>
@@ -80,3 +160,115 @@
     </section>
 
 </main>
+
+@section scripts {
+
+    <script>
+
+                $(document).ready(function () {
+
+                    var urlBuscar = $("#urlBuscar").val();
+                    var urlDetalle = $("#urlDetalle").val();
+
+                    // Buscar tickets
+                    function buscarTickets() {
+
+                        var busqueda = $("#busqueda").val();
+
+                        $.ajax({
+
+                            url: urlBuscar,
+                            type: "GET",
+                            data: { busqueda: busqueda },
+
+                            success: function (tickets) {
+
+                                $("#tablaTickets").empty();
+
+                                if (tickets.length === 0) {
+
+                                    $("#tablaTickets").append(
+                                        '<tr><td colspan="6" class="text-center text-muted">No se encontraron tickets.</td></tr>'
+                                    );
+
+                                    return;
+                                }
+
+                                $.each(tickets, function (i, ticket) {
+
+                                    var fila = $("<tr>");
+
+                                    fila.append($("<td>").text(ticket.Id));
+                                    fila.append($("<td>").text(ticket.Titulo));
+                                    fila.append($("<td>").text(ticket.Categoria));
+                                    fila.append($("<td>").text(ticket.NombreEstado));
+
+                                    var fecha = new Date(
+                                        parseInt(
+                                            ticket.FechaCreacion.replace(
+                                                /\/Date\((\d+)\)\//, "$1"
+                                            )
+                                        )
+                                    );
+
+                                    fila.append(
+                                        $("<td>").text(
+                                            fecha.toLocaleString("es-CR")
+                                        )
+                                    );
+
+                                    var enlace = $("<a>")
+                                        .attr("href", urlDetalle + "/" + ticket.Id)
+                                        .addClass("btn btn-sm btn-outline-primary")
+                                        .text("Ver detalle");
+
+                                    var acciones = $("<td>");
+                                    acciones.append(enlace);
+
+                                    fila.append(acciones);
+
+                                    $("#tablaTickets").append(fila);
+
+                                });
+
+                            },
+
+                            error: function () {
+
+                                $("#tablaTickets").html(
+                                    '<tr><td colspan="6" class="text-center text-danger">Error al buscar los tickets.</td></tr>'
+                                );
+
+                            }
+
+                        });
+
+                    }
+
+                    // Botón buscar
+                    $("#btnBuscar").click(function () {
+                        buscarTickets();
+                    });
+
+                    // Buscar al presionar Enter
+                    $("#busqueda").keypress(function (e) {
+
+                        if (e.which === 13) {
+                            buscarTickets();
+                        }
+
+                    });
+
+                    // Limpiar búsqueda
+                    $("#btnLimpiar").click(function () {
+
+                        $("#busqueda").val("");
+                        buscarTickets();
+
+                    });
+
+                });
+
+    </script>
+
+}

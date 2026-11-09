@@ -55,5 +55,46 @@ namespace PAW_Proyecto1_MauricioSolorzanoBarrantes.Data
             // Se devuelve el objeto Usuario encontrado o null si no se encontró ningún usuario con el email proporcionado.
             return usuario;
         }
+        //Obtener todos los usuarios con estado activo desde la base de datos.
+        public List<Usuario> ObtenerUsuarios()
+        {
+            // Crear una lista para almacenar los usuarios obtenidos
+            List<Usuario> lista = new List<Usuario>();
+            // Establecer la conexión con la base de datos utilizando la clase Conexion
+            using (SqlConnection conexion = Conexion.ObtenerConexion())
+            {
+                // Definir la consulta SQL para obtener todos los usuarios con rol "Usuario" y estado activo
+                string consulta = @"
+                SELECT Id, Nombre, Email
+                FROM Usuarios
+              
+                WHERE Estado = 1
+                ORDER BY Nombre";
+                // Crear un comando SQL para ejecutar la consulta
+
+                //WHERE Rol = 'Usuario'
+
+                using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                {
+                    conexion.Open();
+                    // Ejecutar la consulta y obtener un lector de datos
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        // Recorrer los resultados y mapearlos a objetos Usuario
+                        while (lector.Read())
+                        {
+                            lista.Add(new Usuario
+                            {
+                                Id = Convert.ToInt32(lector["Id"]),
+                                Nombre = lector["Nombre"].ToString(),
+                                Email = lector["Email"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            return lista;
+        }
     }
 }

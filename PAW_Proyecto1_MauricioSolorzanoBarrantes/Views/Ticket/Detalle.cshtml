@@ -8,7 +8,10 @@
 <main class="container">
 
     <section class="mt-4">
-
+        @if (TempData["Mensaje"] != null)
+        {
+            <p>@TempData["Mensaje"]</p>
+        }
         <header class="mb-4">
             <h2>Detalle del ticket #@Model.Id</h2>
             <p class="text-muted">
@@ -41,11 +44,119 @@
                         <p>@Model.Categoria</p>
                     </div>
 
+
                     <div class="col-md-6 mb-3">
+
                         <strong>Estado:</strong>
                         <p>@Model.NombreEstado</p>
+
+                        @if (Session["UsuarioRol"] != null &&
+                             Session["UsuarioRol"].ToString() == "Administrador")
+                        {
+                            <div class="mt-2">
+
+                                @using (Html.BeginForm("CambiarEstado", "Ticket", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden" name="idTicket" value="@Model.Id" />
+
+                                    <div class="mb-2">
+
+                                        <label for="idEstado" class="form-label">
+                                            Cambiar estado:
+                                        </label>
+
+                                        <select id="idEstado"
+                                                name="idEstado"
+                                                class="form-select"
+                                                required>
+
+                                            @foreach (var estado in ViewBag.Estados)
+                                            {
+                                                <option value="@estado.Id"
+                                                        selected="@(estado.Id == Model.IdEstado)">
+                                                    @estado.Nombre
+                                                </option>
+                                            }
+
+                                        </select>
+
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        Actualizar estado
+                                    </button>
+                                }
+
+                            </div>
+                        }
+
                     </div>
 
+                    <div>
+                        <p>
+                            <strong>Usuario asignado:</strong>
+
+                            @(string.IsNullOrEmpty(Model.NombreUsuarioAsignado)
+                            ? "Sin asignar"
+                            : Model.NombreUsuarioAsignado)
+                        </p>
+                    </div>
+                    <div>
+
+                        @if (Session["UsuarioRol"] != null &&
+                             Session["UsuarioRol"].ToString() == "Administrador")
+                        {
+                            <div class="card shadow-sm mb-4">
+
+                                <div class="card-header">
+                                    <h5 class="mb-0">Asignar ticket</h5>
+                                </div>
+
+                                <div class="card-body">
+
+                                    @using (Html.BeginForm("Asignar", "Ticket", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden" name="idTicket" value="@Model.Id" />
+
+                                        <div class="mb-3">
+
+                                            <label for="idUsuario" class="form-label">
+                                                Seleccionar usuario:
+                                            </label>
+
+                                            <select id="idUsuario"
+                                                    name="idUsuario"
+                                                    class="form-select"
+                                                    required>
+
+                                                <option value="">Seleccione un usuario</option>
+
+                                                @foreach (var usuario in ViewBag.Usuarios)
+                                                {
+                                                    <option value="@usuario.Id">
+                                                        @usuario.Nombre (@usuario.Email)
+                                                    </option>
+                                                }
+
+                                            </select>
+
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            Asignar ticket
+                                        </button>
+                                    }
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
                 </div>
 
                 <div>
@@ -112,12 +223,12 @@
 
         <div class="mb-4">
             @Html.ActionLink(
-                               "Volver a mis tickets",
-                               "Index",
-                               "Ticket",
-                               null,
-                               new { @class = "btn btn-outline-secondary" }
-                           )
+                                              "Volver a mis tickets",
+                                              "Index",
+                                              "Ticket",
+                                              null,
+                                              new { @class = "btn btn-outline-secondary" }
+                                          )
         </div>
 
     </section>
