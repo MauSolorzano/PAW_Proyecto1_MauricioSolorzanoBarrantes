@@ -8,7 +8,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C1490E16-FB9D-4B31-4461-EB2FF3DC1026}</ProjectGuid>
+    <ProjectGuid>{0BB9ADA2-5B9C-42DF-947A-4AE14A46CD15}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -123,6 +123,7 @@
     <Compile Include="Controllers\ComentarioController.cs" />
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ReporteController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Data\ComentarioData.cs" />
     <Compile Include="Data\Conexion.cs" />
@@ -136,6 +137,7 @@
     </Compile>
     <Compile Include="Models\Comentario.cs" />
     <Compile Include="Models\EstadoTicket.cs" />
+    <Compile Include="Models\ReporteEstado.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -195,6 +197,7 @@
     <Content Include="Views\Ticket\Crear.cshtml" />
     <Content Include="Views\Ticket\Detalle.cshtml" />
     <Content Include="Views\Ticket\Index.cshtml" />
+    <Content Include="Views\Reporte\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

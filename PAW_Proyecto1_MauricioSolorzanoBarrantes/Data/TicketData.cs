@@ -299,5 +299,44 @@ namespace PAW_Proyecto1_MauricioSolorzanoBarrantes.Data
 
             return lista;
         }
+
+
+        // Obtener la cantidad de tickets agrupados por estado
+        public List<ReporteEstado> ObtenerReportePorEstado()
+        {
+            // Crear una lista para almacenar los resultados
+            List<ReporteEstado> lista = new List<ReporteEstado>();
+
+            using (SqlConnection conexion = Conexion.ObtenerConexion())
+            {
+                string consulta = @"
+                    SELECT E.Nombre AS NombreEstado,
+                           COUNT(T.Id) AS Cantidad
+                    FROM EstadosTicket E
+                    LEFT JOIN Tickets T ON E.Id = T.IdEstado
+                    GROUP BY E.Id, E.Nombre
+                    ORDER BY E.Id";
+
+                using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                {
+                    conexion.Open();
+
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            lista.Add(new ReporteEstado
+                            {
+                                NombreEstado = lector["NombreEstado"].ToString(),
+                                Cantidad = Convert.ToInt32(lector["Cantidad"])
+                            });
+                        }
+                    }
+                }
+            }
+
+            return lista;
+        }
+
     }
 }
